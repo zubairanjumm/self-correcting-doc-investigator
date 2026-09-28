@@ -7,7 +7,9 @@ load_dotenv()
 
 
 def create_rewriter():
-    return ChatGoogleGenerativeAI(model=MODEL_NAME)
+    return ChatGoogleGenerativeAI(
+        model=MODEL_NAME,
+    )
 
 
 def rewrite_query(question, documents):
@@ -36,7 +38,26 @@ labels, or markdown.
 """
 
     response = rewriter.invoke(prompt)
-    rewritten = response.content.strip()
+
+    content = response.content
+
+    if isinstance(content, str):
+        rewritten = content.strip()
+
+    elif isinstance(content, list):
+        parts = []
+
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+
+            elif isinstance(item, dict) and "text" in item:
+                parts.append(item["text"])
+
+        rewritten = "".join(parts).strip()
+
+    else:
+        rewritten = str(content).strip()
 
     if not rewritten:
         return question
