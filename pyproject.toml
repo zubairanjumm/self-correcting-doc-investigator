@@ -9,9 +9,11 @@ dependencies = [
     "google-genai>=2.25.0",
     "langchain>=1.4.2",
     "langchain-community>=0.4.2",
+    "langchain-text-splitters>=1.1.2",
     "langgraph>=1.2.12",
     "pydantic>=2.13.5",
     "python-dotenv>=1.2.3",
+    "sentence-transformers>=6.1.0",
 ]
 
 [dependency-groups]
