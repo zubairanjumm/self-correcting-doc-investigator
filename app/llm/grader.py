@@ -1,22 +1,28 @@
-from pydantic import BaseModel, Field
-from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel, Field
+
+from app.config import MODEL_NAME
 
 load_dotenv()
 
+
 class GradeResult(BaseModel):
     relevant: bool = Field(
-        description="Whether the retrieved documents are relevant to answering the question."
+        description="Whether the retrieved documents contain enough information to answer the question."
     )
 
 
 def create_grader():
-    return ChatGoogleGenerativeAI(
-        model="gemini-3.8-flash",
-    ).with_structured_output(GradeResult)
+    return ChatGoogleGenerativeAI(model=MODEL_NAME).with_structured_output(
+        GradeResult
+    )
 
 
 def grade_documents(question, documents):
+    if not documents:
+        return False
+
     grader = create_grader()
 
     document_text = "\n\n".join(
@@ -35,10 +41,10 @@ User question:
 Retrieved documentation:
 {document_text}
 
-Return relevant=true if the documentation is relevant to the question.
-Return relevant=false if it is unrelated or does not contain useful information.
+Return relevant=true only when the documentation contains useful information
+that directly helps answer the question.
+Return relevant=false when it is unrelated or insufficient.
 """
 
     result = grader.invoke(prompt)
-
     return result.relevant
