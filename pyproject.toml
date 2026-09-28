@@ -1,0 +1,20 @@
+[project]
+name = "self-correcting-doc-investigator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "chromadb>=1.5.9",
+    "google-genai>=2.25.0",
+    "langchain>=1.4.2",
+    "langchain-community>=0.4.2",
+    "langgraph>=1.2.12",
+    "pydantic>=2.13.5",
+    "python-dotenv>=1.2.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
